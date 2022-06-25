@@ -387,7 +387,7 @@ figure figcaption {
   font-size: 18px;
   line-height: 1.5;
   margin-bottom: 30px;
-  font-weight: 300;
+  font-weight: 400;
   font-family: "Quicksand", Arial, sans-serif;
 }
 #hero .flexslider .slider-text > .slider-text-inner h2 a {
@@ -422,6 +422,7 @@ figure figcaption {
   color: #000;
   border: 1px solid #000;
   background: transparent !important;
+  font-weight: 500;
 }
 #hero .flexslider .slider-text > .slider-text-inner .btn.btn-learn:hover {
   background: transparent !important;
