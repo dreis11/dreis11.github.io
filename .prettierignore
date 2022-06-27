@@ -1,2 +1,3 @@
 # Ignore minified files
 js/*.min.js
+css/*.min.css
