@@ -198,7 +198,6 @@
   // Document on load.
   $(function () {
     fullHeight();
-    // counter();
     contentWayPoint();
     burgerMenu();
 
