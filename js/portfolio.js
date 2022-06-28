@@ -77,7 +77,7 @@ const checkForHash = () => {
   hash = hash.replace("#", "");
   if (isNumber(hash)) {
     const $categoryBtnContainer = $("#category-btn-container");
-    const $activeCatBtn = $categoryBtnContainer.children()[hash];
+    const $activeCatBtn = $categoryBtnContainer.find("button")[hash];
     $activeCatBtn.click();
   }
 };
