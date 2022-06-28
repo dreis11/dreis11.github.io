@@ -1102,7 +1102,8 @@ body.offcanvas .nav-toggle {
   color: #2c98f0;
 }
 
-.project {
+.project,
+.gallery {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -1140,6 +1141,14 @@ body.offcanvas .nav-toggle {
 }
 .project .desc h3 a {
   color: #000000;
+}
+
+.gallery {
+  height: 200px;
+}
+
+.gallery h3 {
+  margin: 20px 0 0 0;
 }
 
 .btn-load-more {
@@ -1221,12 +1230,15 @@ body.offcanvas .nav-toggle {
 .btn.btn-lg {
   padding: 18px 36px !important;
 }
-.btn:hover,
 .btn:active,
 .btn:focus {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   outline: none !important;
+}
+
+.active.btn {
+  background-color: rgb(157, 157, 157);
 }
 
 .btn-primary {
@@ -1557,4 +1569,9 @@ body.offcanvas .nav-toggle {
 
 .js .animate-box {
   opacity: 0;
+}
+
+#gallery-container {
+  display: flex;
+  flex-wrap: wrap;
 }
