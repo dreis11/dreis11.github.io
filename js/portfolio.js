@@ -1,10 +1,12 @@
-const generateFilePath = (idx, num, isThumb = true) => {
+const generateFilePath = (idx, num) => {
   const dirName = CATEGORIES[idx].filePath;
-  const charCodeIdx = "A".charCodeAt() + idx;
-  const prefix = String.fromCharCode(charCodeIdx);
   num = String(num).padStart(3, "0");
-  const type = isThumb ? "thumbs" : "hires";
-  return `images/portfolio/${dirName}/${type}/${prefix}${num}.jpg`;
+  const thumbPath = `images/portfolio/${dirName}/thumb/${
+    idx + 1
+  }.${num}.A-thumb.jpg`;
+  const hiresPath = `images/portfolio/${dirName}/hires/${idx + 1}.${num}.A.jpg`;
+  // 0 is thumb, 1 is hires
+  return [thumbPath, hiresPath];
 };
 
 const generateCategoryBtns = () => {
@@ -27,19 +29,23 @@ const getFileNameFromPath = (filePath) => {
   return filePath.split("//").pop().split("/").pop();
 };
 
-const generateGalleryCell = (filePath) => {
+const generateGalleryCell = (filePathArr) => {
+  const [thumbPath, hiresPath] = filePathArr;
   const img = new Image();
   // Remove extension
-  const fileName = getFileNameFromPath(filePath).replace(/\.[^/.]+$/, "");
+  const fileName = getFileNameFromPath(thumbPath).split("-")[0];
   const h3 = $("<h3></h3>").text(fileName);
-  img.src = filePath;
+  img.src = thumbPath;
   const $container = $("<div></div>");
+  const $link = $("<a></a>");
+  $link.attr("href", hiresPath);
   $container.addClass("col-md-4");
   const $inner = $("<div></div>");
   $inner.addClass("gallery");
   $inner.append(img);
   $inner.append(h3);
-  $container.append($inner);
+  $link.append($inner);
+  $container.append($link);
   return $container;
 };
 
