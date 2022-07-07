@@ -1,0 +1,74 @@
+
+<div id="container">
+
+  <!--
+    Gallery title
+  -->
+  <header>
+    <p><a href="../index.html">&#8962; Home</a></p>
+    <h1><a href="{{relative gallery.home.url}}">{{gallery.title}}</a></h1>
+  </header>
+
+  <!--
+    Breadcrumbs of parent albums
+  -->
+  <nav class="breadcrumbs">
+    {{#each breadcrumbs~}}
+      <a class="breadcrumb-item" href="{{relative url}}">{{title}}</a>&nbsp;/&nbsp;
+    {{~/each~}}
+    <a class="breadcrumb-item" href="{{relative album.url}}">{{album.title}}</a>
+  </nav>
+
+  <!--
+    Pagination
+  -->
+  {{> pagination}}
+
+  <!--
+    Nested albums, if any
+  -->
+  <div id="albums">
+    {{#each album.albums~}}
+      <a href="{{relative url}}" style="background-image: url('{{relative previews.0.urls.small}}')">
+        <div class="info">
+          <h3>{{title}}</h3>
+          <div class="summary">{{summary}}</div>
+        </div>
+      </a>
+    {{~/each}}
+  </div>
+
+  <!--
+    All photos and videos
+  -->
+  <ul id="media" class="clearfix">
+    {{#each album.files~}}
+      {{> thumbnail}}
+    {{~/each}}
+  </ul>
+
+  <!--
+    Pagination
+  -->
+  {{> pagination}}
+
+  <!--
+    Zip file link
+  -->
+  {{#if album.zip}}
+    <div id="zip">
+      Download album as a <a href="{{album.zip}}">zip file</a>.
+    </div>
+  {{/if}}
+
+
+  <!--
+    Optional footer
+  -->
+  {{#if gallery.footer}}
+  <footer>
+    <p>{{{gallery.footer}}}</p>
+  </footer>
+  {{/if}}
+
+</div>

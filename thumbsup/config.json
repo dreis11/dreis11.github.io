@@ -1,0 +1,17 @@
+{
+  "input": "../airbrush-artistry-assets/RAW/Archived Art",
+  "output": "portfolio",
+  "index": "portfolio.html",
+  "title": "Portfolio",
+  "thumb-size": 200,
+  "theme-path": "thumbsup/theme",
+  "include-videos": false,
+  "cleanup": true,
+  "watermark": "thumbsup/watermark.png",
+  "watermark-position": "SouthEast",
+  "album-page-size": 20,
+  "home-album-name": "Categories",
+  "sort-albums-by": "title",
+  "sort-media-by": "filename",
+  "log": "debug"
+}

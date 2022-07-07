@@ -1,0 +1,40 @@
+{{#compare pagination.length '>' 1}}
+    <nav class="pagination">
+      {{!-- PREV --}}
+      {{#each pagination}}
+        {{#if current}}
+          {{#compare index '>' 1}}
+          {{!-- Index = object property, @index = #each helper array index --}}
+            {{#with (lookup ../this.pagination (prev @index))}}
+              <a class="page" href="{{relative url}}">&laquo;</a>
+            {{/with}}
+          {{/compare}}
+          {{#compare index "===" 1}}
+            <span class="page">&laquo;</span>
+          {{/compare}}
+        {{/if}}
+      {{/each}}
+      {{!-- PAGES --}}
+      {{#each pagination}}
+        {{#if current}}
+          <span class="page current">{{index}}</span>
+        {{else}}
+          <a class="page" href="{{relative url}}">{{index}}</a>
+        {{/if}}
+      {{/each}}
+      {{!-- NEXT --}}
+      {{#each pagination}}
+        {{#if current}}
+          {{#compare index '<' ../this.pagination.length}}
+            {{#with (lookup ../this.pagination (next @index))}}
+              <a class="page" href="{{relative url}}">&raquo;</a>
+            {{/with}}
+          {{/compare}}
+          {{#compare index "===" ../this.pagination.length}}
+            <span class="page">&raquo;</span>
+          {{/compare}}
+        {{/if}}
+      {{/each}}
+
+    </nav>
+  {{/compare}}
