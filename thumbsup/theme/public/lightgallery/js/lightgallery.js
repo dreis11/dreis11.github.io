@@ -1,8 +1,23 @@
-/*! lightgallery - v1.2.14 - 2016-01-18
+/*! lightgallery - v1.10.0 - 2020-11-07
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
-(function($, window, document, undefined) {
+* Copyright (c) 2020 Sachin N; Licensed GPLv3 */
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module unless amdModuleId is set
+    define(['jquery'], function (a0) {
+      return (factory(a0));
+    });
+  } else if (typeof module === 'object' && module.exports) {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory(require('jquery'));
+  } else {
+    factory(root["jQuery"]);
+  }
+}(this, function ($) {
 
+(function() {
     'use strict';
 
     var defaults = {
@@ -20,9 +35,17 @@
         addClass: '',
         startClass: 'lg-start-zoom',
         backdropDuration: 150,
+
+        // Set 0, if u don't want to hide the controls 
         hideBarsDelay: 6000,
 
         useLeft: false,
+
+        // aria-labelledby attribute fot gallery
+        ariaLabelledby: '',
+        
+        //aria-describedby attribute for gallery
+        ariaDescribedby: '',
 
         closable: true,
         loop: true,
@@ -33,12 +56,16 @@
         hideControlOnEnd: false,
         mousewheel: true,
 
+        getCaptionFromTitleOrAlt: true,
+
         // .lg-item || '.lg-sub-html'
         appendSubHtmlTo: '.lg-sub-html',
 
+        subHtmlSelectorRelative: false,
+
         /**
          * @desc number of preload slides
-         * will exicute only after the current slide is fully loaded.
+         * will execute only after the current slide is fully loaded.
          *
          * @ex you clicked on 4th image and if preload = 1 then 3rd slide and 5th
          * slide will be loaded in the background after the 4th slide is fully loaded..
@@ -67,7 +94,8 @@
 
         dynamic: false,
         dynamicEl: [],
-        galleryId: 1
+        galleryId: 1,
+        supportLegacyBrowser: true
     };
 
     function Plugin(element, options) {
@@ -95,7 +123,7 @@
         this.lgBusy = false;
 
         // Timeout function for hiding controls;
-        this.hideBartimeout = false;
+        this.hideBarTimeout = false;
 
         // To determine browser supports for touch events;
         this.isTouch = ('ontouchstart' in document.documentElement);
@@ -152,8 +180,9 @@
             if (!$('body').hasClass('lg-on')) {
                 setTimeout(function() {
                     _this.build(_this.index);
-                    $('body').addClass('lg-on');
                 });
+
+                $('body').addClass('lg-on');
             }
         }
 
@@ -209,7 +238,7 @@
         });
 
         // initiate slide function
-        _this.slide(index, false, false);
+        _this.slide(index, false, false, false);
 
         if (_this.s.keyPress) {
             _this.keyPress();
@@ -227,6 +256,10 @@
             if (_this.s.mousewheel) {
                 _this.mousewheel();
             }
+        } else {
+            _this.$slide.on('click.lg', function() {
+                _this.$el.trigger('onSlideClick.lg');
+            });
         }
 
         _this.counter();
@@ -236,18 +269,23 @@
         _this.$el.trigger('onAfterOpen.lg');
 
         // Hide controllers if mouse doesn't move for some period
-        _this.$outer.on('mousemove.lg click.lg touchstart.lg', function() {
+        if (_this.s.hideBarsDelay > 0) {
 
-            _this.$outer.removeClass('lg-hide-items');
+            // Hide controllers if mouse doesn't move for some period
+            _this.$outer.on('mousemove.lg click.lg touchstart.lg', function () {
+                _this.$outer.removeClass('lg-hide-items');
 
-            clearTimeout(_this.hideBartimeout);
+                clearTimeout(_this.hideBarTimeout);
 
-            // Timeout will be cleared on each slide movement also
-            _this.hideBartimeout = setTimeout(function() {
-                _this.$outer.addClass('lg-hide-items');
-            }, _this.s.hideBarsDelay);
+                // Timeout will be cleared on each slide movement also
+                _this.hideBarTimeout = setTimeout(function () {
+                    _this.$outer.addClass('lg-hide-items');
+                }, _this.s.hideBarsDelay);
 
-        });
+            });
+        }
+
+        _this.$outer.trigger('mousemove.lg');
 
     };
 
@@ -270,20 +308,25 @@
         // Create controlls
         if (this.s.controls && this.$items.length > 1) {
             controls = '<div class="lg-actions">' +
-                '<div class="lg-prev lg-icon">' + this.s.prevHtml + '</div>' +
-                '<div class="lg-next lg-icon">' + this.s.nextHtml + '</div>' +
+                '<button type="button" aria-label="Previous slide" class="lg-prev lg-icon">' + this.s.prevHtml + '</button>' +
+                '<button type="button" aria-label="Next slide" class="lg-next lg-icon">' + this.s.nextHtml + '</button>' +
                 '</div>';
         }
 
         if (this.s.appendSubHtmlTo === '.lg-sub-html') {
-            subHtmlCont = '<div class="lg-sub-html"></div>';
+            subHtmlCont = '<div role="status" aria-live="polite" class="lg-sub-html"></div>';
         }
 
-        template = '<div class="lg-outer ' + this.s.addClass + ' ' + this.s.startClass + '">' +
+        var ariaLabelledby = this.s.ariaLabelledby ?
+            'aria-labelledby="' + this.s.ariaLabelledby + '"' : '';
+        var ariaDescribedby = this.s.ariaDescribedby ?
+            'aria-describedby="' + this.s.ariaDescribedby + '"' : '';
+
+        template = '<div tabindex="-1" aria-modal="true" ' + ariaLabelledby + ' ' + ariaDescribedby + ' role="dialog" class="lg-outer ' + this.s.addClass + ' ' + this.s.startClass + '">' +
             '<div class="lg" style="width:' + this.s.width + '; height:' + this.s.height + '">' +
             '<div class="lg-inner">' + list + '</div>' +
-            '<div class="lg-toolbar group">' +
-            '<span class="lg-close lg-icon"></span>' +
+            '<div class="lg-toolbar lg-group">' +
+            '<button type="button" aria-label="Close gallery" class="lg-close lg-icon"></button>' +
             '</div>' +
             controls +
             subHtmlCont +
@@ -292,6 +335,7 @@
 
         $('body').append(template);
         this.$outer = $('.lg-outer');
+        this.$outer.focus();
         this.$slide = this.$outer.find('.lg-item');
 
         if (this.s.useLeft) {
@@ -340,14 +384,16 @@
             $inner.css('transition-duration', this.s.speed + 'ms');
         }
 
-        $('.lg-backdrop').addClass('in');
+        setTimeout(function() {
+            $('.lg-backdrop').addClass('in');
+        });
 
         setTimeout(function() {
             _this.$outer.addClass('lg-visible');
         }, this.s.backdropDuration);
 
         if (this.s.download) {
-            this.$outer.find('.lg-toolbar').append('<a id="lg-download" target="_blank" download class="lg-download lg-icon"></a>');
+            this.$outer.find('.lg-toolbar').append('<a id="lg-download" aria-label="Download" target="_blank" download class="lg-download lg-icon"></a>');
         }
 
         // Store the current scroll top value to scroll back after closing the gallery..
@@ -405,15 +451,21 @@
             html = this.$items.eq(index).attr('data-html');
         }
 
-        if (!src && html) {
-            return {
-                html5: true
-            };
+        if (!src) {
+            if (html) {
+                return {
+                    html5: true
+                };
+            } else {
+                console.error('lightGallery :- data-src is not provided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
+                return false;
+            }
         }
 
-        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)/i);
-        var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
+        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)/i);
+        var vimeo = src.match(/\/\/(?:www\.)?(?:player\.)?vimeo.com\/(?:video\/)?([0-9a-z\-_]+)/i);
         var dailymotion = src.match(/\/\/(?:www\.)?dai.ly\/([0-9a-z\-_]+)/i);
+        var vk = src.match(/\/\/(?:www\.)?(?:vk\.com|vkontakte\.ru)\/(?:video_ext\.php\?)(.*)/i);
 
         if (youtube) {
             return {
@@ -427,6 +479,10 @@
             return {
                 dailymotion: dailymotion
             };
+        } else if (vk) {
+            return {
+                vk: vk
+            };
         }
     };
 
@@ -436,7 +492,7 @@
      */
     Plugin.prototype.counter = function() {
         if (this.s.counter) {
-            $(this.s.appendCounterTo).append('<div id="lg-counter"><span id="lg-counter-current">' + (parseInt(this.index, 10) + 1) + '</span> / <span id="lg-counter-all">' + this.$items.length + '</span></div>');
+            $(this.s.appendCounterTo).append('<div id="lg-counter" role="status" aria-live="polite"><span id="lg-counter-current">' + (parseInt(this.index, 10) + 1) + '</span> / <span id="lg-counter-all">' + this.$items.length + '</span></div>');
         }
     };
 
@@ -447,6 +503,7 @@
     Plugin.prototype.addHtml = function(index) {
         var subHtml = null;
         var subHtmlUrl;
+        var $currentEle;
         if (this.s.dynamic) {
             if (this.s.dynamicEl[index].subHtmlUrl) {
                 subHtmlUrl = this.s.dynamicEl[index].subHtmlUrl;
@@ -454,10 +511,14 @@
                 subHtml = this.s.dynamicEl[index].subHtml;
             }
         } else {
-            if (this.$items.eq(index).attr('data-sub-html-url')) {
-                subHtmlUrl = this.$items.eq(index).attr('data-sub-html-url');
+            $currentEle = this.$items.eq(index);
+            if ($currentEle.attr('data-sub-html-url')) {
+                subHtmlUrl = $currentEle.attr('data-sub-html-url');
             } else {
-                subHtml = this.$items.eq(index).attr('data-sub-html');
+                subHtml = $currentEle.attr('data-sub-html');
+                if (this.s.getCaptionFromTitleOrAlt && !subHtml) {
+                    subHtml = $currentEle.attr('title') || $currentEle.find('img').first().attr('alt');
+                }
             }
         }
 
@@ -468,9 +529,11 @@
                 // if first letter starts with . or # get the html form the jQuery object
                 var fL = subHtml.substring(0, 1);
                 if (fL === '.' || fL === '#') {
-                    subHtml = $(subHtml).html();
-                } else {
-                    subHtml = subHtml;
+                    if (this.s.subHtmlSelectorRelative && !this.s.dynamic) {
+                        subHtml = $currentEle.find(subHtml).html();
+                    } else {
+                        subHtml = $(subHtml).html();
+                    }
                 }
             } else {
                 subHtml = '';
@@ -546,6 +609,7 @@
         var _srcset;
         var _sizes;
         var _html;
+        var _alt;
         var getResponsiveSrc = function(srcItms) {
             var rsWidth = [];
             var rsSrc = [];
@@ -579,6 +643,7 @@
 
             _html = _this.s.dynamicEl[index].html;
             _src = _this.s.dynamicEl[index].src;
+            _alt = _this.s.dynamicEl[index].alt;
 
             if (_this.s.dynamicEl[index].responsive) {
                 var srcDyItms = _this.s.dynamicEl[index].responsive.split(',');
@@ -589,22 +654,23 @@
             _sizes = _this.s.dynamicEl[index].sizes;
 
         } else {
-
-            if (_this.$items.eq(index).attr('data-poster')) {
+            var $currentEle = _this.$items.eq(index);
+            if ($currentEle.attr('data-poster')) {
                 _hasPoster = true;
-                _poster = _this.$items.eq(index).attr('data-poster');
+                _poster = $currentEle.attr('data-poster');
             }
 
-            _html = _this.$items.eq(index).attr('data-html');
-            _src = _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src');
+            _html = $currentEle.attr('data-html');
+            _src = $currentEle.attr('href') || $currentEle.attr('data-src');
+            _alt = $currentEle.attr('title') || $currentEle.find('img').first().attr('alt');
 
-            if (_this.$items.eq(index).attr('data-responsive')) {
-                var srcItms = _this.$items.eq(index).attr('data-responsive').split(',');
+            if ($currentEle.attr('data-responsive')) {
+                var srcItms = $currentEle.attr('data-responsive').split(',');
                 getResponsiveSrc(srcItms);
             }
 
-            _srcset = _this.$items.eq(index).attr('data-srcset');
-            _sizes = _this.$items.eq(index).attr('data-sizes');
+            _srcset = $currentEle.attr('data-srcset');
+            _sizes = $currentEle.attr('data-sizes');
 
         }
 
@@ -624,7 +690,7 @@
         var _isVideo = _this.isVideo(_src, index);
         if (!_this.$slide.eq(index).hasClass('lg-loaded')) {
             if (iframe) {
-                _this.$slide.eq(index).prepend('<div class="lg-video-cont" style="max-width:' + _this.s.iframeMaxWidth + '"><div class="lg-video"><iframe class="lg-object" frameborder="0" src="' + _src + '"  allowfullscreen="true"></iframe></div></div>');
+                _this.$slide.eq(index).prepend('<div class="lg-video-cont lg-has-iframe" style="max-width:' + _this.s.iframeMaxWidth + '"><div class="lg-video"><iframe class="lg-object" frameborder="0" src="' + _src + '"  allowfullscreen="true"></iframe></div></div>');
             } else if (_hasPoster) {
                 var videoClass = '';
                 if (_isVideo && _isVideo.youtube) {
@@ -641,7 +707,8 @@
                 _this.$slide.eq(index).prepend('<div class="lg-video-cont "><div class="lg-video"></div></div>');
                 _this.$el.trigger('hasVideo.lg', [index, _src, _html]);
             } else {
-                _this.$slide.eq(index).prepend('<div class="lg-img-wrap"><img class="lg-object lg-image" src="' + _src + '" /></div>');
+                _alt = _alt ? 'alt="' + _alt + '"' : '';
+                _this.$slide.eq(index).prepend('<div class="lg-img-wrap"><img class="lg-object lg-image" ' + _alt + ' src="' + _src + '" /></div>');
             }
 
             _this.$el.trigger('onAferAppendSlide.lg', [index]);
@@ -653,12 +720,14 @@
 
             if (_srcset) {
                 _$img.attr('srcset', _srcset);
-                try {
-                    picturefill({
-                        elements: [_$img[0]]
-                    });
-                } catch (e) {
-                    console.error('Make sure you have included Picturefill version 2');
+                if (this.s.supportLegacyBrowser) {
+                    try {
+                        picturefill({
+                            elements: [_$img[0]]
+                        });
+                    } catch (e) {
+                        console.warn('lightGallery :- If you want srcset to be supported for older browser please include picturefil version 2 javascript library in your document.');
+                    }
                 }
             }
 
@@ -724,8 +793,9 @@
     *   @param {Number} index - index of the slide
     *   @param {Boolean} fromTouch - true if slide function called via touch event or mouse drag
     *   @param {Boolean} fromThumb - true if slide function called via thumbnail click
+    *   @param {String} direction - Direction of the slide(next/prev)
     */
-    Plugin.prototype.slide = function(index, fromTouch, fromThumb) {
+    Plugin.prototype.slide = function(index, fromTouch, fromThumb, direction) {
 
         var _prevIndex = this.$outer.find('.lg-current').index();
         var _this = this;
@@ -738,8 +808,6 @@
 
         var _length = this.$slide.length;
         var _time = _this.lGalleryOn ? this.s.speed : 0;
-        var _next = false;
-        var _prev = false;
 
         if (!_this.lgBusy) {
 
@@ -764,7 +832,7 @@
 
             _this.lgBusy = true;
 
-            clearTimeout(_this.hideBartimeout);
+            clearTimeout(_this.hideBarTimeout);
 
             // Add title if this.s.appendSubHtmlTo === lg-sub-html
             if (this.s.appendSubHtmlTo === '.lg-sub-html') {
@@ -777,6 +845,14 @@
 
             this.arrowDisable(index);
 
+            if (!direction) {
+                if (index < _prevIndex) {
+                    direction = 'prev';
+                } else if (index > _prevIndex) {
+                    direction = 'next';
+                }
+            }
+
             if (!fromTouch) {
 
                 // remove all transitions
@@ -784,26 +860,12 @@
 
                 this.$slide.removeClass('lg-prev-slide lg-next-slide');
 
-                if (index < _prevIndex) {
-                    _prev = true;
-                    if ((index === 0) && (_prevIndex === _length - 1) && !fromThumb) {
-                        _prev = false;
-                        _next = true;
-                    }
-                } else if (index > _prevIndex) {
-                    _next = true;
-                    if ((index === _length - 1) && (_prevIndex === 0) && !fromThumb) {
-                        _prev = true;
-                        _next = false;
-                    }
-                }
-
-                if (_prev) {
+                if (direction === 'prev') {
 
                     //prevslide
                     this.$slide.eq(index).addClass('lg-prev-slide');
                     this.$slide.eq(_prevIndex).addClass('lg-next-slide');
-                } else if (_next) {
+                } else {
 
                     // next slide
                     this.$slide.eq(index).addClass('lg-next-slide');
@@ -822,24 +884,36 @@
                 }, 50);
             } else {
 
-                var touchPrev = index - 1;
-                var touchNext = index + 1;
+                this.$slide.removeClass('lg-prev-slide lg-current lg-next-slide');
+                var touchPrev;
+                var touchNext;
+                if (_length > 2) {
+                    touchPrev = index - 1;
+                    touchNext = index + 1;
 
-                if ((index === 0) && (_prevIndex === _length - 1)) {
+                    if ((index === 0) && (_prevIndex === _length - 1)) {
 
-                    // next slide
-                    touchNext = 0;
-                    touchPrev = _length - 1;
-                } else if ((index === _length - 1) && (_prevIndex === 0)) {
+                        // next slide
+                        touchNext = 0;
+                        touchPrev = _length - 1;
+                    } else if ((index === _length - 1) && (_prevIndex === 0)) {
 
-                    // prev slide
-                    touchNext = 0;
-                    touchPrev = _length - 1;
+                        // prev slide
+                        touchNext = 0;
+                        touchPrev = _length - 1;
+                    }
+
+                } else {
+                    touchPrev = 0;
+                    touchNext = 1;
                 }
 
-                this.$slide.removeClass('lg-prev-slide lg-current lg-next-slide');
-                _this.$slide.eq(touchPrev).addClass('lg-prev-slide');
-                _this.$slide.eq(touchNext).addClass('lg-next-slide');
+                if (direction === 'prev') {
+                    _this.$slide.eq(touchNext).addClass('lg-next-slide');
+                } else {
+                    _this.$slide.eq(touchPrev).addClass('lg-prev-slide');
+                }
+
                 _this.$slide.eq(index).addClass('lg-current');
             }
 
@@ -867,6 +941,7 @@
             }
 
         }
+        _this.index = index;
 
     };
 
@@ -876,17 +951,22 @@
      */
     Plugin.prototype.goToNextSlide = function(fromTouch) {
         var _this = this;
+        var _loop = _this.s.loop;
+        if (fromTouch && _this.$slide.length < 3) {
+            _loop = false;
+        }
+
         if (!_this.lgBusy) {
             if ((_this.index + 1) < _this.$slide.length) {
                 _this.index++;
                 _this.$el.trigger('onBeforeNextSlide.lg', [_this.index]);
-                _this.slide(_this.index, fromTouch, false);
+                _this.slide(_this.index, fromTouch, false, 'next');
             } else {
-                if (_this.s.loop) {
+                if (_loop) {
                     _this.index = 0;
                     _this.$el.trigger('onBeforeNextSlide.lg', [_this.index]);
-                    _this.slide(_this.index, fromTouch, false);
-                } else if (_this.s.slideEndAnimatoin) {
+                    _this.slide(_this.index, fromTouch, false, 'next');
+                } else if (_this.s.slideEndAnimatoin && !fromTouch) {
                     _this.$outer.addClass('lg-right-end');
                     setTimeout(function() {
                         _this.$outer.removeClass('lg-right-end');
@@ -902,17 +982,22 @@
      */
     Plugin.prototype.goToPrevSlide = function(fromTouch) {
         var _this = this;
+        var _loop = _this.s.loop;
+        if (fromTouch && _this.$slide.length < 3) {
+            _loop = false;
+        }
+
         if (!_this.lgBusy) {
             if (_this.index > 0) {
                 _this.index--;
                 _this.$el.trigger('onBeforePrevSlide.lg', [_this.index, fromTouch]);
-                _this.slide(_this.index, fromTouch, false);
+                _this.slide(_this.index, fromTouch, false, 'prev');
             } else {
-                if (_this.s.loop) {
+                if (_loop) {
                     _this.index = _this.$items.length - 1;
                     _this.$el.trigger('onBeforePrevSlide.lg', [_this.index, fromTouch]);
-                    _this.slide(_this.index, fromTouch, false);
-                } else if (_this.s.slideEndAnimatoin) {
+                    _this.slide(_this.index, fromTouch, false, 'prev');
+                } else if (_this.s.slideEndAnimatoin && !fromTouch) {
                     _this.$outer.addClass('lg-left-end');
                     setTimeout(function() {
                         _this.$outer.removeClass('lg-left-end');
@@ -1050,7 +1135,7 @@
         var endCoords = 0;
         var isMoved = false;
 
-        if (_this.s.enableSwipe && _this.isTouch && _this.doCss()) {
+        if (_this.s.enableSwipe && _this.doCss()) {
 
             _this.$slide.on('touchstart.lg', function(e) {
                 if (!_this.$outer.hasClass('lg-zoomed') && !_this.lgBusy) {
@@ -1089,30 +1174,23 @@
         var endCoords = 0;
         var isDraging = false;
         var isMoved = false;
-        if (_this.s.enableDrag && !_this.isTouch && _this.doCss()) {
+        if (_this.s.enableDrag && _this.doCss()) {
             _this.$slide.on('mousedown.lg', function(e) {
-                // execute only on .lg-object
-                if (!_this.$outer.hasClass('lg-zoomed')) {
-                    if ($(e.target).hasClass('lg-object') || $(e.target).hasClass('lg-video-play')) {
-                        e.preventDefault();
+                if (!_this.$outer.hasClass('lg-zoomed') && !_this.lgBusy && !$(e.target).text().trim()) {
+                    e.preventDefault();
+                    _this.manageSwipeClass();
+                    startCoords = e.pageX;
+                    isDraging = true;
 
-                        if (!_this.lgBusy) {
-                            _this.manageSwipeClass();
-                            startCoords = e.pageX;
-                            isDraging = true;
+                    // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
+                    _this.$outer.scrollLeft += 1;
+                    _this.$outer.scrollLeft -= 1;
 
-                            // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
-                            _this.$outer.scrollLeft += 1;
-                            _this.$outer.scrollLeft -= 1;
+                    // *
 
-                            // *
+                    _this.$outer.removeClass('lg-grab').addClass('lg-grabbing');
 
-                            _this.$outer.removeClass('lg-grab').addClass('lg-grabbing');
-
-                            _this.$el.trigger('onDragstart.lg');
-                        }
-
-                    }
+                    _this.$el.trigger('onDragstart.lg');
                 }
             });
 
@@ -1145,23 +1223,22 @@
     };
 
     Plugin.prototype.manageSwipeClass = function() {
-        var touchNext = this.index + 1;
-        var touchPrev = this.index - 1;
-        var length = this.$slide.length;
-        if (this.s.loop) {
+        var _touchNext = this.index + 1;
+        var _touchPrev = this.index - 1;
+        if (this.s.loop && this.$slide.length > 2) {
             if (this.index === 0) {
-                touchPrev = length - 1;
-            } else if (this.index === length - 1) {
-                touchNext = 0;
+                _touchPrev = this.$slide.length - 1;
+            } else if (this.index === this.$slide.length - 1) {
+                _touchNext = 0;
             }
         }
 
         this.$slide.removeClass('lg-next-slide lg-prev-slide');
-        if (touchPrev > -1) {
-            this.$slide.eq(touchPrev).addClass('lg-prev-slide');
+        if (_touchPrev > -1) {
+            this.$slide.eq(_touchPrev).addClass('lg-prev-slide');
         }
 
-        this.$slide.eq(touchNext).addClass('lg-next-slide');
+        this.$slide.eq(_touchNext).addClass('lg-next-slide');
     };
 
     Plugin.prototype.mousewheel = function() {
@@ -1205,6 +1282,10 @@
 
             });
 
+            _this.$outer.on('mousemove.lg', function() {
+                mousedown = false;
+            });
+
             _this.$outer.on('mouseup.lg', function(e) {
 
                 if ($(e.target).is('.lg-outer') || $(e.target).is('.lg-item ') || $(e.target).is('.lg-img-wrap') && mousedown) {
@@ -1225,9 +1306,9 @@
 
         if (!d) {
             _this.$el.trigger('onBeforeClose.lg');
+            $(window).scrollTop(_this.prevScrollTop);
         }
 
-        $(window).scrollTop(_this.prevScrollTop);
 
         /**
          * if d is false or undefined destroy will only close the gallery
@@ -1248,7 +1329,7 @@
         // Unbind all events added by lightGallery
         this.$el.off('.lg.tm');
 
-        // Distroy all lightGallery modules
+        // destroy all lightGallery modules
         $.each($.fn.lightGallery.modules, function(key) {
             if (_this.modules[key]) {
                 _this.modules[key].destroy();
@@ -1257,8 +1338,8 @@
 
         this.lGalleryOn = false;
 
-        clearTimeout(_this.hideBartimeout);
-        this.hideBartimeout = false;
+        clearTimeout(_this.hideBarTimeout);
+        this.hideBarTimeout = false;
         $(window).off('.lg');
         $('body').removeClass('lg-on lg-from-hash');
 
@@ -1278,6 +1359,7 @@
             if (!d) {
                 _this.$el.trigger('onCloseAfter.lg');
             }
+            _this.$el.focus();
 
         }, _this.s.backdropDuration + 50);
     };
@@ -1290,7 +1372,7 @@
                 try {
                     $(this).data('lightGallery').init();
                 } catch (err) {
-                    console.error('lightGallery has not initiated properly');
+                    console.error('lightGallery has not initiated properly', err);
                 }
             }
         });
@@ -1298,4 +1380,7 @@
 
     $.fn.lightGallery.modules = {};
 
-})(jQuery, window, document);
+})();
+
+
+}));
