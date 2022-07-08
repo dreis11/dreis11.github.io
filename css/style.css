@@ -502,6 +502,12 @@ body.offcanvas .nav-toggle {
   padding-bottom: 7em;
 }
 
+#contact-details {
+  display: flex;
+  align-items: center;
+  border-left: 1px solid lightgrey;
+}
+
 @media screen and (max-width: 768px) {
   .experience,
   .skills,
@@ -568,6 +574,8 @@ body.offcanvas .nav-toggle {
   padding: 2em;
   line-height: 1.5;
   background: #f9bf3f;
+  border-radius: 10px;
+  font-weight: 500;
 }
 
 .clients li {
