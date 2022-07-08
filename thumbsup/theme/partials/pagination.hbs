@@ -6,11 +6,11 @@
           {{#compare index '>' 1}}
           {{!-- Index = object property, @index = #each helper array index --}}
             {{#with (lookup ../this.pagination (prev @index))}}
-              <a class="page" href="{{relative url}}">&laquo;</a>
+              <a class="page" href="{{relative url}}">&laquo;&nbsp;Prev</a>
             {{/with}}
           {{/compare}}
           {{#compare index "===" 1}}
-            <span class="page">&laquo;</span>
+            <span class="page">&laquo;&nbsp;Prev</span>
           {{/compare}}
         {{/if}}
       {{/each}}
@@ -27,11 +27,11 @@
         {{#if current}}
           {{#compare index '<' ../this.pagination.length}}
             {{#with (lookup ../this.pagination (next @index))}}
-              <a class="page" href="{{relative url}}">&raquo;</a>
+              <a class="page" href="{{relative url}}">Next&nbsp;&raquo;</a>
             {{/with}}
           {{/compare}}
           {{#compare index "===" ../this.pagination.length}}
-            <span class="page">&raquo;</span>
+            <span class="page">Next&nbsp;&raquo;</span>
           {{/compare}}
         {{/if}}
       {{/each}}

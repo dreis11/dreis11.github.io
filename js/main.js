@@ -202,9 +202,7 @@
     burgerMenu();
 
     clickMenu();
-    // navActive();
     navigationSection();
-    // windowScroll();
 
     mobileMenuOutsideClick();
     sliderMain();
