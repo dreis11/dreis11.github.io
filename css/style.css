@@ -289,7 +289,7 @@ figure figcaption {
   background: #fff;
   width: 100%;
   float: left;
-  margin-bottom: 10em;
+  /* margin-bottom: 10em; */
   clear: both;
 }
 #hero .flexslider {
@@ -323,6 +323,7 @@ figure figcaption {
   #hero .flexslider .flex-control-nav {
     right: 20px;
     top: 100px;
+    max-height: 200px;
   }
 }
 #hero .flexslider .flex-control-nav li {
@@ -348,9 +349,19 @@ figure figcaption {
 #hero .flexslider .slider-text {
   display: table;
   background-color: rgba(255, 255, 255, 0.5);
-  min-height: 500px;
+  min-height: 800px;
   z-index: 9;
+  border-top-left-radius: 13% 60%;
+  border-bottom-left-radius: 13% 60%;
 }
+
+@media screen and (max-width: 768px) {
+  #hero .flexslider .slider-text {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+}
+
 #hero .flexslider .slider-text > .slider-text-inner {
   display: table-cell;
   vertical-align: middle;
@@ -361,6 +372,8 @@ figure figcaption {
 @media screen and (max-width: 768px) {
   #hero .flexslider .slider-text > .slider-text-inner {
     text-align: center;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
   }
 }
 #hero .flexslider .slider-text > .slider-text-inner h1,

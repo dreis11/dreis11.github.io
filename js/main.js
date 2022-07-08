@@ -114,7 +114,7 @@
       if ($('[data-section="' + section + '"]').length) {
         $("html, body").animate(
           {
-            scrollTop: $('[data-section="' + section + '"]').offset().top - 10,
+            scrollTop: $('[data-section="' + section + '"]').offset().top,
           },
           500
         );
