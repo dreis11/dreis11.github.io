@@ -582,9 +582,15 @@ body.offcanvas .nav-toggle {
 .clients {
   padding: 2em;
   line-height: 1.5;
-  background: #f9bf3f;
+  background: rgb(250, 250, 250);
   border-radius: 10px;
-  font-weight: 500;
+  width: 75%;
+}
+
+@media screen and (max-width: 768px) {
+  .clients {
+    width: 100%;
+  }
 }
 
 .clients li {
@@ -989,15 +995,11 @@ body.offcanvas .nav-toggle {
 
 .project {
   background-size: cover;
-  /* background-position: center center; */
+  background-position: center center;
   background-repeat: no-repeat;
   position: relative;
   height: 300px;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   margin-bottom: 30px;
   transition: transform 0.2s;
   border: 1px solid grey;
@@ -1010,7 +1012,9 @@ body.offcanvas .nav-toggle {
 .project .desc {
   width: 100%;
   height: 20%;
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  bottom: 0;
 }
 .project .desc .con {
   padding: 20px;
