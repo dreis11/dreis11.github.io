@@ -3,7 +3,7 @@
   "output": "portfolio",
   "index": "portfolio.html",
   "title": "Portfolio",
-  "thumb-size": 200,
+  "thumb-size": 210,
   "theme-path": "thumbsup/theme",
   "include-videos": false,
   "cleanup": true,
@@ -13,6 +13,5 @@
   "home-album-name": "Categories",
   "sort-albums-by": "title",
   "sort-media-by": "filename",
-  "log": "debug",
-  "album-previews": "spread"
+  "log": "debug"
 }
