@@ -996,12 +996,14 @@ body.offcanvas .nav-toggle {
   height: 300px;
   width: 100%;
   margin-bottom: 30px;
-  transition: transform 0.2s;
+  -webkit-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
   border: 1px solid grey;
+  opacity: 1;
 }
 
 .project:hover {
-  transform: scale(1.05);
+  opacity: 0.5;
 }
 
 .project .desc {

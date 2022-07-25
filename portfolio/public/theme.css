@@ -87,6 +87,12 @@ nav.breadcrumbs {
   height: 220px;
   background-size: cover;
   border-radius: 8px;
+  -webkit-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
+  opacity: 1;
+}
+#albums a:hover {
+  opacity: 0.5;
 }
 #albums .info {
   position: absolute;
@@ -110,6 +116,12 @@ nav.breadcrumbs {
   margin-bottom: 0.2em;
   position: relative;
   cursor: zoom-in;
+  transition: 0.3s ease-in-out;
+  -webkit-transition: 0.3s ease-in-out;
+  opacity: 1;
+}
+#media li:hover {
+  opacity: 0.5;
 }
 #media a {
   display: inline-block;
