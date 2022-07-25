@@ -298,6 +298,7 @@ figure figcaption {
 #hero .flexslider .slides li {
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center center;
   min-height: 400px;
   position: relative;
 }
@@ -503,7 +504,7 @@ body.offcanvas .nav-toggle {
   right: 0px;
   bottom: 0px;
   left: 0px;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .contact {
