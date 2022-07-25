@@ -508,7 +508,7 @@ body.offcanvas .nav-toggle {
 }
 
 .contact {
-  padding-bottom: 7em;
+  padding-bottom: 10em;
 }
 
 #contact-details {
@@ -584,13 +584,7 @@ body.offcanvas .nav-toggle {
   line-height: 1.5;
   background: rgb(250, 250, 250);
   border-radius: 10px;
-  width: 75%;
-}
-
-@media screen and (max-width: 768px) {
-  .clients {
-    width: 100%;
-  }
+  max-width: 520px;
 }
 
 .clients li {
