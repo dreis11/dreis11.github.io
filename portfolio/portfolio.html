@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, user-scalable=no" />
+      <title>Portfolio - Categories</title>
+      <link rel="stylesheet" href="public/lightgallery/css/lightgallery.css" />
+      <link rel="stylesheet" href="public/lightgallery/css/lg-exif.min.css" />
+      <link rel="stylesheet" href="public/core.css" />
+      <link rel="stylesheet" href="public/theme.css" />
+  </head>
+
+  <body>
+
+    
+    <div id="container">
+    
+      <!--
+        Gallery title
+      -->
+      <header>
+        <p><a href="../index.html">Home</a></p>
+        <h1><a href="portfolio.html">Portfolio</a></h1>
+      </header>
+    
+      <!--
+        Breadcrumbs of parent albums
+      -->
+      <nav class="breadcrumbs">
+    <a class="breadcrumb-item" href="portfolio.html">Categories</a>
+      </nav>
+    
+      <!--
+        Pagination
+      -->
+    
+      <!--
+        Nested albums, if any
+      -->
+      <div id="albums">
+    <a href="Automotive-Art.html" style="background-image: url('media/small/Automotive%20Art/!1.021.A.jpg')">
+            <div class="info">
+              <h3>Automotive Art</h3>
+              <div class="summary">31 photos</div>
+            </div>
+          </a><a href="Fine-Art-Illustrations.html" style="background-image: url('media/small/Fine%20Art-Illustrations/!6.029.A.jpg')">
+            <div class="info">
+              <h3>Fine Art-Illustrations</h3>
+              <div class="summary">35 photos</div>
+            </div>
+          </a><a href="Interior-Art.html" style="background-image: url('media/small/Interior%20Art/!3.007.A.jpg')">
+            <div class="info">
+              <h3>Interior Art</h3>
+              <div class="summary">29 photos</div>
+            </div>
+          </a><a href="Motorcycles-and-Helmets.html" style="background-image: url('media/small/Motorcycles%20%26%20Helmets/!2.017.A.jpg')">
+            <div class="info">
+              <h3>Motorcycles &amp; Helmets</h3>
+              <div class="summary">67 photos</div>
+            </div>
+          </a><a href="Other.html" style="background-image: url('media/small/Other/!5.017.A.jpg')">
+            <div class="info">
+              <h3>Other</h3>
+              <div class="summary">18 photos</div>
+            </div>
+          </a><a href="Signs.html" style="background-image: url('media/small/Signs/!4.004.A.jpg')">
+            <div class="info">
+              <h3>Signs</h3>
+              <div class="summary">9 photos</div>
+            </div>
+          </a><a href="Snowboards.html" style="background-image: url('media/small/Snowboards/!8.010.A.JPG')">
+            <div class="info">
+              <h3>Snowboards</h3>
+              <div class="summary">16 photos</div>
+            </div>
+          </a><a href="T-shirts.html" style="background-image: url('media/small/T-shirts/!7.031.A.jpg')">
+            <div class="info">
+              <h3>T-shirts</h3>
+              <div class="summary">31 photos</div>
+            </div>
+          </a>  </div>
+    
+      <!--
+        All photos and videos
+      -->
+      <ul id="media" class="clearfix">
+      </ul>
+    
+      <!--
+        Pagination
+      -->
+    
+      <!--
+        Zip file link
+      -->
+    
+    
+      <!--
+        Optional footer
+      -->
+    
+    </div>
+    <!-- Video loader -->
+    <div id="videos">
+    </div>
+
+    <!-- jQuery -->
+    <script src="public/jquery.min.js"></script>
+    <!-- VideoJS -->
+    <!-- LightGallery -->
+    <script src="public/lightgallery/js/lightgallery-all.min.js"></script>
+    <script src="public/lightgallery/js/lg-exif.min.js"></script>
+
+    <script>
+      $(document).ready(function() {
+        $("#media").lightGallery({
+          thumbWidth: 80,
+          controls: true,
+          loop : false,
+          download: false,
+          counter: true,
+          videojs: false,
+          fullScreen: true,
+          zoom: true,
+          rotate: false,
+          flipHorizontal: false,
+          flipVertical: false,
+          share: false,
+          getCaptionFromTitleOrAlt: false,
+        });
+      });
+    </script>
+
+
+  </body>
+
+</html>
