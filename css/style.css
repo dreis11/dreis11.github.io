@@ -573,6 +573,12 @@ body.offcanvas .nav-toggle {
   margin-bottom: 30px;
 }
 
+@media screen and (max-width: 768px) {
+  .about-desc {
+    padding: 0px 10px;
+  }
+}
+
 .about-desc h3 {
   font-size: 18px;
   text-transform: uppercase;
@@ -586,6 +592,7 @@ body.offcanvas .nav-toggle {
   background: rgb(250, 250, 250);
   border-radius: 10px;
   max-width: 520px;
+  box-shadow: 0px 0px 56px -8px rgba(0, 0, 0, 0.17);
 }
 
 .clients li {
