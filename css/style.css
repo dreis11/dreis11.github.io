@@ -13,7 +13,7 @@
 body {
   font-family: "Quicksand", Arial, sans-serif;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1.8;
   color: rgba(0, 0, 0, 0.7);
 }
@@ -158,7 +158,7 @@ figure figcaption {
   margin: 0 0 10px 0;
   padding: 0;
   list-style: none;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -500,6 +500,7 @@ body.offcanvas .nav-toggle {
   background-image: url("../portfolio/media/small/Fine Art-Illustrations/!6.029.A.jpg");
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center center;
   position: absolute;
   top: 0px;
   right: 0px;
@@ -573,26 +574,22 @@ body.offcanvas .nav-toggle {
   margin-bottom: 30px;
 }
 
+.clients {
+  padding: 2em;
+  line-height: 1.5;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  max-width: 520px;
+  box-shadow: 0px 0px 56px -8px rgba(0, 0, 0, 0.17);
+}
+
 @media screen and (max-width: 768px) {
   .about-desc {
     padding: 0px 10px;
   }
-}
-
-.about-desc h3 {
-  font-size: 18px;
-  text-transform: uppercase;
-  letter-spacing: 5px;
-  font-weight: 500;
-}
-
-.clients {
-  padding: 2em;
-  line-height: 1.5;
-  background: rgb(250, 250, 250);
-  border-radius: 10px;
-  max-width: 520px;
-  box-shadow: 0px 0px 56px -8px rgba(0, 0, 0, 0.17);
+  .clients {
+    border-radius: 0px;
+  }
 }
 
 .clients li {
