@@ -105,8 +105,9 @@ figure figcaption {
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s;
+  height: 100%;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   #aside {
     width: 300px;
     -moz-transform: translateX(-300px);
@@ -149,7 +150,7 @@ figure figcaption {
   margin: 0;
   padding: 0;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   #aside #main-menu ul {
     margin: 0 0 2em 0;
   }
@@ -224,7 +225,7 @@ figure figcaption {
   padding: 0 20px;
   width: 100%;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   #aside .footer {
     position: relative;
     bottom: 0;
@@ -267,7 +268,7 @@ figure figcaption {
   transition: 0.5s;
   box-shadow: 0px 0px 56px -8px rgba(0, 0, 0, 0.17);
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   #main {
     width: 100%;
     padding: 0 1em;
@@ -310,7 +311,7 @@ figure figcaption {
   float: left;
   width: auto;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   #hero .flexslider .flex-control-nav {
     right: 20px;
     top: 100px;
@@ -339,7 +340,7 @@ figure figcaption {
 }
 #hero .flexslider .slider-text {
   display: table;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.7);
   min-height: 800px;
   z-index: 9;
   border-top-left-radius: 13% 60%;
@@ -1018,7 +1019,7 @@ body.offcanvas .nav-toggle {
   bottom: 0;
 }
 .project .desc .con {
-  padding: 20px;
+  padding: 20px 10px;
   text-align: center;
 }
 .project .desc h3 {
@@ -1397,7 +1398,7 @@ body.offcanvas .nav-toggle {
   -o-transition: 0.5s;
   transition: 0.5s;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   .nav-toggle {
     opacity: 1;
     visibility: visible;
