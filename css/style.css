@@ -1004,6 +1004,7 @@ body.offcanvas .nav-toggle {
   transition: 0.3s ease-in-out;
   border: 1px solid grey;
   opacity: 1;
+  border-radius: 10px;
 }
 
 .project:hover {
@@ -1016,6 +1017,8 @@ body.offcanvas .nav-toggle {
   background: rgba(0, 0, 0, 0.5);
   position: absolute;
   bottom: 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 .project .desc .con {
   padding: 20px 10px;
@@ -1265,10 +1268,10 @@ body.offcanvas .nav-toggle {
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  border-radius: 0;
+  -webkit-border-radius: 10p;
+  -moz-border-radius: 10p;
+  -ms-border-radius: 10p;
+  border-radius: 10px;
 }
 .form-control:active,
 .form-control:focus {
