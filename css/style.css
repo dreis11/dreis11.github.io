@@ -105,7 +105,6 @@ figure figcaption {
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s;
-  height: 100%;
 }
 @media screen and (max-width: 1024px) {
   #aside {
