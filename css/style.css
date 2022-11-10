@@ -1452,3 +1452,7 @@ body.offcanvas .nav-toggle {
 .js .animate-box {
   opacity: 0;
 }
+
+label {
+  margin-bottom: 0;
+}
