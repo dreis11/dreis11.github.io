@@ -270,7 +270,6 @@ figure figcaption {
 @media screen and (max-width: 1024px) {
   #main {
     width: 100%;
-    padding: 0 1em;
   }
 }
 
@@ -468,11 +467,6 @@ body.offcanvas .nav-toggle {
 .narrow-content {
   padding: 0 2.5em;
 }
-@media screen and (max-width: 768px) {
-  .narrow-content {
-    padding: 0;
-  }
-}
 
 .no-gutters {
   margin: 0;
@@ -509,8 +503,13 @@ body.offcanvas .nav-toggle {
   opacity: 0.3;
 }
 
+.portfolio {
+  background-color: #e6e7e9;
+}
+
 .contact {
   padding-bottom: 10em;
+  background-color: #bccede;
 }
 
 #contact-details {
@@ -579,16 +578,13 @@ body.offcanvas .nav-toggle {
   line-height: 1.5;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 10px;
-  max-width: 520px;
+  /* max-width: 520px; */
   box-shadow: 0px 0px 56px -8px rgba(0, 0, 0, 0.17);
 }
 
 @media screen and (max-width: 768px) {
-  .about-desc {
-    padding: 0px 10px;
-  }
-  .clients {
-    border-radius: 0px;
+  .clients > ul {
+    padding-inline-start: 15px;
   }
 }
 
@@ -1019,10 +1015,15 @@ body.offcanvas .nav-toggle {
   bottom: 0;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
 }
 .project .desc .con {
-  padding: 20px 10px;
-  text-align: center;
+  /* padding: 20px 10px;
+  text-align: center; */
+  height: 25px;
 }
 .project .desc h3 {
   color: #fff;
@@ -1031,6 +1032,12 @@ body.offcanvas .nav-toggle {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+@media screen and (max-width: 768px) {
+  .project .desc h3 {
+    font-size: 20px;
+  }
 }
 
 .btn-load-more {
