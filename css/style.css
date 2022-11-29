@@ -1023,11 +1023,6 @@ body.offcanvas .nav-toggle {
   align-items: center;
   padding: 5px 10px;
 }
-.project .desc .con {
-  /* padding: 20px 10px;
-  text-align: center; */
-  height: 25px;
-}
 .project .desc h3 {
   color: #fff;
   font-family: "Quicksand", Arial, sans-serif;
@@ -1035,6 +1030,8 @@ body.offcanvas .nav-toggle {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
+  margin: 0;
+  text-align: center;
 }
 
 @media screen and (max-width: 768px) {
