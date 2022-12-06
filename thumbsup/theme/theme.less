@@ -123,12 +123,19 @@ nav.breadcrumbs {
   margin: 0em;
 }
 
+#albums {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 300px);
+  grid-gap: 1rem;
+  justify-content: center;
+}
+
 #albums a {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: inline-block;
-  margin-right: 2em;
-  margin-bottom: 3em;
+  // display: inline-block;
+  // margin-right: 2em;
+  // margin-bottom: 3em;
   position: relative;
   overflow: hidden;
   width: 300px;
@@ -147,7 +154,7 @@ nav.breadcrumbs {
 #albums .info {
   position: absolute;
   padding: 1em;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.4);
   color: #fff;
   font-size: 0.9em;
   line-height: 1.2em;
@@ -165,11 +172,17 @@ nav.breadcrumbs {
 // -----------------------------------
 // Photo and video thumbnails
 // -----------------------------------
+#media {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 213px);
+  grid-gap: 3px;
+  justify-content: center;
+}
 
 #media li {
-  float: left;
-  margin-right: 0.4em;
-  margin-bottom: 0.2em;
+  // float: left;
+  // margin-right: 0.4em;
+  // margin-bottom: 0.2em;
   position: relative;
   cursor: zoom-in;
   transition: .3s ease-in-out;

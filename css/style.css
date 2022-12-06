@@ -502,6 +502,7 @@ body.offcanvas .nav-toggle {
 .contact {
   padding-bottom: 10em;
   background-color: #c5d8e9;
+  min-height: 800px;
 }
 
 #contact-details {
